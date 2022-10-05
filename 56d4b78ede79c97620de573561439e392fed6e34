@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8e5bc695_eeee6061",
+        "filename": "INFO.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 7833
+      },
+      "writtenOn": "2022-10-05T16:32:29Z",
+      "side": 1,
+      "message": "is this date correct?",
+      "revId": "56d4b78ede79c97620de573561439e392fed6e34",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}

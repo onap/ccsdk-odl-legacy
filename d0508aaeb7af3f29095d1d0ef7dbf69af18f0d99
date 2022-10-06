@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "faf74d7d_ddbea7c3",
+        "filename": "INFO.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 7833
+      },
+      "writtenOn": "2022-10-06T01:51:20Z",
+      "side": 1,
+      "message": "just quick reminder: this anchor can be named to something that makes sense for this project, in this case \u0027\u0026onap_releng_ptl\u0027 gives the idea that RELENG has some participation here which is not the case, it doesn\u0027t stop me from approving this INFO file so this is more like a friendly reminder.",
+      "revId": "d0508aaeb7af3f29095d1d0ef7dbf69af18f0d99",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "44fd6f4d_44aef19f",
+        "filename": "INFO.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 7833
+      },
+      "writtenOn": "2022-10-06T01:51:20Z",
+      "side": 1,
+      "message": "just quick reminder: this anchor can be named to something that makes sense for this project, in this case \u0027\u0026onap_releng_ptl\u0027 gives the idea that RELENG has some participation here which is not the case, it doesn\u0027t stop me from approving this INFO file so this is more like a friendly reminder.",
+      "revId": "d0508aaeb7af3f29095d1d0ef7dbf69af18f0d99",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b6d60a34_2334f0df",
+        "filename": "INFO.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 7833
+      },
+      "writtenOn": "2022-10-06T01:51:20Z",
+      "side": 1,
+      "message": "just quick reminder: this anchor can be named to something that makes sense for this project, in this case \u0027\u0026onap_releng_ptl\u0027 gives the idea that RELENG has some participation here which is not the case, it doesn\u0027t stop me from approving this INFO file so this is more like a friendly reminder.",
+      "revId": "d0508aaeb7af3f29095d1d0ef7dbf69af18f0d99",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}

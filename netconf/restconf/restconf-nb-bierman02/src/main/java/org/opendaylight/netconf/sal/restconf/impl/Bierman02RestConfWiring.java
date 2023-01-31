@@ -19,8 +19,8 @@ import org.opendaylight.mdsal.dom.api.DOMSchemaService;
 import org.opendaylight.netconf.sal.rest.impl.RestconfApplication;
 import org.opendaylight.netconf.sal.restconf.api.RestConfConfig;
 import org.opendaylight.netconf.sal.restconf.web.WebInitializer;
+import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev130715.IetfInetUtil;
 import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev130715.IpAddress;
-import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev130715.IpAddressBuilder;
 import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev130715.PortNumber;
 import org.opendaylight.yangtools.yang.common.Uint16;
 import org.slf4j.Logger;
@@ -58,7 +58,7 @@ public class Bierman02RestConfWiring {
 
         // WebSocket
         LOG.info("webSocketAddress = {}, webSocketPort = {}", config.webSocketAddress(), config.webSocketPort());
-        IpAddress wsIpAddress = IpAddressBuilder.getDefaultInstance(config.webSocketAddress().getHostAddress());
+        IpAddress wsIpAddress = IetfInetUtil.ipAddressFor(config.webSocketAddress().getHostAddress());
         this.webSocketServer = new RestconfProviderImpl(stats, wsIpAddress,
             new PortNumber(Uint16.valueOf(config.webSocketPort())));
     }

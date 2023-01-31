@@ -13,8 +13,8 @@ import static org.mockito.Mockito.mock;
 
 import org.junit.Test;
 import org.opendaylight.netconf.sal.restconf.impl.RestCodec;
-import org.opendaylight.yangtools.concepts.IllegalArgumentCodec;
 import org.opendaylight.yangtools.yang.common.QName;
+import org.opendaylight.yangtools.yang.data.api.codec.IllegalArgumentCodec;
 import org.opendaylight.yangtools.yang.model.api.type.IdentityrefTypeDefinition;
 import org.opendaylight.yangtools.yang.model.ri.type.BaseTypes;
 

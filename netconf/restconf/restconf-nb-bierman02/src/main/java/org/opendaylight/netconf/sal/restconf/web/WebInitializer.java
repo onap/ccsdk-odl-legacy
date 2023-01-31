@@ -17,11 +17,11 @@ import org.opendaylight.aaa.web.FilterDetails;
 import org.opendaylight.aaa.web.ServletDetails;
 import org.opendaylight.aaa.web.WebContext;
 import org.opendaylight.aaa.web.WebContextBuilder;
-import org.opendaylight.aaa.web.WebContextRegistration;
 import org.opendaylight.aaa.web.WebContextSecurer;
 import org.opendaylight.aaa.web.WebServer;
 import org.opendaylight.aaa.web.servlet.ServletSupport;
 import org.opendaylight.netconf.sal.rest.impl.RestconfApplication;
+import org.opendaylight.yangtools.concepts.Registration;
 
 /**
  * Initializes the bierman-02 endpoint.
@@ -31,7 +31,7 @@ import org.opendaylight.netconf.sal.rest.impl.RestconfApplication;
 @Singleton
 public class WebInitializer {
 
-    private final WebContextRegistration registration;
+    private final Registration registration;
 
     @Inject
     public WebInitializer(final WebServer webServer, final WebContextSecurer webContextSecurer,

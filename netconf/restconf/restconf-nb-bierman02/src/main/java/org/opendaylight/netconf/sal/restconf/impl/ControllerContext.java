@@ -51,8 +51,7 @@ import org.opendaylight.netconf.sal.rest.api.Draft02.RestConfModule;
 import org.opendaylight.restconf.common.context.InstanceIdentifierContext;
 import org.opendaylight.restconf.common.errors.RestconfDocumentedException;
 import org.opendaylight.restconf.common.util.RestUtil;
-import org.opendaylight.yangtools.concepts.IllegalArgumentCodec;
-import org.opendaylight.yangtools.concepts.ListenerRegistration;
+import org.opendaylight.yangtools.concepts.Registration;
 import org.opendaylight.yangtools.yang.common.ErrorTag;
 import org.opendaylight.yangtools.yang.common.ErrorType;
 import org.opendaylight.yangtools.yang.common.QName;
@@ -65,6 +64,7 @@ import org.opendaylight.yangtools.yang.data.api.YangInstanceIdentifier.InstanceI
 import org.opendaylight.yangtools.yang.data.api.YangInstanceIdentifier.NodeIdentifier;
 import org.opendaylight.yangtools.yang.data.api.YangInstanceIdentifier.NodeIdentifierWithPredicates;
 import org.opendaylight.yangtools.yang.data.api.YangInstanceIdentifier.PathArgument;
+import org.opendaylight.yangtools.yang.data.api.codec.IllegalArgumentCodec;
 import org.opendaylight.yangtools.yang.model.api.AnyxmlSchemaNode;
 import org.opendaylight.yangtools.yang.model.api.CaseSchemaNode;
 import org.opendaylight.yangtools.yang.model.api.ChoiceSchemaNode;
@@ -105,7 +105,7 @@ public final class ControllerContext implements EffectiveModelContextListener, C
 
     private final DOMMountPointService mountService;
     private final DOMYangTextSourceProvider yangTextSourceProvider;
-    private final ListenerRegistration<?> listenerRegistration;
+    private final Registration listenerRegistration;
     private volatile EffectiveModelContext globalSchema;
     private volatile DataNormalizer dataNormalizer;
 

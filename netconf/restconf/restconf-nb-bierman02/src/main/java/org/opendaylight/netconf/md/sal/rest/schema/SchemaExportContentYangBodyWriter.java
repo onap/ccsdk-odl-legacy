@@ -20,7 +20,7 @@ import javax.ws.rs.ext.MessageBodyWriter;
 import javax.ws.rs.ext.Provider;
 import org.opendaylight.restconf.common.schema.SchemaExportContext;
 import org.opendaylight.yangtools.yang.common.YangConstants;
-import org.opendaylight.yangtools.yang.model.repo.api.RevisionSourceIdentifier;
+import org.opendaylight.yangtools.yang.model.repo.api.SourceIdentifier;
 import org.opendaylight.yangtools.yang.model.repo.api.YangTextSchemaSource;
 
 @Provider
@@ -44,8 +44,8 @@ public class SchemaExportContentYangBodyWriter implements MessageBodyWriter<Sche
             final Annotation[] annotations, final MediaType mediaType,
             final MultivaluedMap<String, Object> httpHeaders, final OutputStream entityStream) throws IOException,
             WebApplicationException {
-        final RevisionSourceIdentifier sourceId = RevisionSourceIdentifier.create(context.getModule().getName(),
-                context.getModule().getQNameModule().getRevision());
+        final SourceIdentifier sourceId = new SourceIdentifier(context.getModule().getName(),
+                context.getModule().getQNameModule().getRevision().get());
         final YangTextSchemaSource yangTextSchemaSource;
         try {
             yangTextSchemaSource = context.getSourceProvider().getSource(sourceId).get();

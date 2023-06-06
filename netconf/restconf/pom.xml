@@ -30,6 +30,7 @@
     <modules>
 	<module>restconf-common</module>
         <module>restconf-nb-bierman02</module>
+        <module>restconf-nb-bierman02-installer</module>
     </modules>
 
 </project>

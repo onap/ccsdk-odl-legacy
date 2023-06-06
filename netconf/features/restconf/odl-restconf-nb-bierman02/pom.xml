@@ -40,12 +40,6 @@
             <artifactId>restconf-nb-bierman02</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.opendaylight.netconf</groupId>
-            <artifactId>sal-rest-connector-config</artifactId>
-            <type>cfg</type>
-            <classifier>restconf</classifier>
-        </dependency>
 
         <!-- TODO: Remove this when RESTCONF is converted to GSON -->
         <dependency>

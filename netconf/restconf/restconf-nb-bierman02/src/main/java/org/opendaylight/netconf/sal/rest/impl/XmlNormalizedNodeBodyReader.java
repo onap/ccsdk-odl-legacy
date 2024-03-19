@@ -107,7 +107,7 @@ public class XmlNormalizedNodeBodyReader extends AbstractIdentifierAwareJaxRsPro
             return new NormalizedNodeContext(path, null);
         }
 
-        final Document doc = UntrustedXML.newDocumentBuilder().parse(nonEmptyInputStreamOptional.get());
+        final Document doc = UntrustedXML.newDocumentBuilder().parse(nonEmptyInputStreamOptional.orElseThrow());
         return parse(path, doc);
     }
 

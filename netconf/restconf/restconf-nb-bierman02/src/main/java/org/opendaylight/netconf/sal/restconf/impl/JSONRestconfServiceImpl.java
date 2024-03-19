@@ -137,7 +137,7 @@ public class JSONRestconfServiceImpl implements JSONRestconfService {
 
             final Optional<String> result = Optional.of(toJson(readData));
 
-            LOG.debug("get returning: {}", result.get());
+            LOG.debug("get returning: {}", result.orElseThrow());
 
             return result;
         } catch (final Exception e) {
@@ -157,7 +157,7 @@ public class JSONRestconfServiceImpl implements JSONRestconfService {
             throws OperationFailedException {
         requireNonNull(uriPath, "uriPath can't be null");
 
-        final String actualInput = input.isPresent() ? input.get() : null;
+        final String actualInput = input.isPresent() ? input.orElseThrow() : null;
 
         LOG.debug("invokeRpc: uriPath: {}, input: {}", uriPath, actualInput);
 

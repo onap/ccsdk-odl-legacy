@@ -6,15 +6,17 @@
  * and is available at http://www.eclipse.org/legal/epl-v10.html
  */
 package org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.restconf.rev131019;
-import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.restconf.rev131019.DatastoreIdentifier.Enumeration;
 
+import org.opendaylight.yangtools.yang.common.QName;
+import org.opendaylight.yangtools.yang.data.api.DatastoreIdentifier;
 
 /**
  **/
 public class DatastoreIdentifierBuilder {
 
     public static DatastoreIdentifier getDefaultInstance(final String defaultValue) {
-        return new DatastoreIdentifier(Enumeration.valueOf(defaultValue));
+        QName qName = QName.create(defaultValue);
+        return DatastoreIdentifier.of(qName);
     }
 
 }

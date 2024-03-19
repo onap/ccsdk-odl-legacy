@@ -24,13 +24,12 @@ import org.opendaylight.yangtools.yang.data.api.YangInstanceIdentifier.NodeIdent
 import org.opendaylight.yangtools.yang.data.api.schema.ChoiceNode;
 import org.opendaylight.yangtools.yang.data.api.schema.ContainerNode;
 import org.opendaylight.yangtools.yang.data.api.schema.builder.DataContainerNodeBuilder;
-import org.opendaylight.yangtools.yang.data.impl.schema.SchemaAwareBuilders;
+import org.opendaylight.yangtools.yang.data.impl.schema.Builders;
 import org.opendaylight.yangtools.yang.model.api.ChoiceSchemaNode;
 import org.opendaylight.yangtools.yang.model.api.ContainerSchemaNode;
 import org.opendaylight.yangtools.yang.model.api.DataNodeContainer;
 import org.opendaylight.yangtools.yang.model.api.DataSchemaNode;
 import org.opendaylight.yangtools.yang.model.api.EffectiveModelContext;
-import org.opendaylight.yangtools.yang.model.api.LeafSchemaNode;
 import org.opendaylight.yangtools.yang.model.util.SchemaInferenceStack;
 
 public class NnToXmlWithChoiceTest extends AbstractBodyReaderTest {
@@ -74,22 +73,22 @@ public class NnToXmlWithChoiceTest extends AbstractBodyReaderTest {
 
         final DataSchemaNode contSchemaNode = schemaContext
                 .getDataChildByName(contQname);
-        final DataContainerNodeBuilder<NodeIdentifier, ContainerNode> dataContainerNodeAttrBuilder = SchemaAwareBuilders
-                .containerBuilder((ContainerSchemaNode) contSchemaNode);
+        final DataContainerNodeBuilder<NodeIdentifier, ContainerNode> dataContainerNodeAttrBuilder = Builders
+                .containerBuilder();
 
         final DataSchemaNode choiceSchemaNode = ((ContainerSchemaNode) contSchemaNode)
                 .getDataChildByName(choA);
         assertTrue(choiceSchemaNode instanceof ChoiceSchemaNode);
 
-        final DataContainerNodeBuilder<NodeIdentifier, ChoiceNode> dataChoice = SchemaAwareBuilders
-                .choiceBuilder((ChoiceSchemaNode) choiceSchemaNode);
+        final DataContainerNodeBuilder<NodeIdentifier, ChoiceNode> dataChoice = Builders
+                .choiceBuilder();
 
         final var instanceLf = ControllerContext
                 .findInstanceDataChildrenByName(
                         (DataNodeContainer) contSchemaNode, lf.getLocalName());
         final DataSchemaNode schemaLf = instanceLf.get(0).child;
 
-        dataChoice.withChild(SchemaAwareBuilders.leafBuilder((LeafSchemaNode) schemaLf)
+        dataChoice.withChild(Builders.leafBuilder()
                 .withValue(value).build());
 
         dataContainerNodeAttrBuilder.withChild(dataChoice.build());

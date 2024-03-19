@@ -573,7 +573,7 @@ public final class ControllerContext implements EffectiveModelContextListener, C
                     throw new RestconfDocumentedException("Mount point does not exist.", ErrorType.PROTOCOL,
                             ErrorTag.DATA_MISSING);
                 }
-                final DOMMountPoint mount = mountOpt.get();
+                final DOMMountPoint mount = mountOpt.orElseThrow();
 
                 final EffectiveModelContext mountPointSchema = getModelContext(mount);
                 if (mountPointSchema == null) {

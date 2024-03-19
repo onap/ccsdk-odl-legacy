@@ -279,7 +279,7 @@ public class DepthAwareNormalizedNodeWriter implements RestconfNormalizedNodeWri
             for (final QName qname : qnames) {
                 final Optional<? extends NormalizedNode> child = node.findChildByArg(new NodeIdentifier(qname));
                 if (child.isPresent()) {
-                    write(child.get());
+                    write(child.orElseThrow());
                 } else {
                     LOG.info("No child for key element {} found", qname);
                 }

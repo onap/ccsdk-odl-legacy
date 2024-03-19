@@ -9,13 +9,10 @@ package org.opendaylight.restconf.common.util;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Map;
 import java.util.Optional;
 import org.eclipse.jdt.annotation.NonNull;
 import org.opendaylight.yangtools.concepts.SemVer;
 import org.opendaylight.yangtools.yang.common.QNameModule;
-import org.opendaylight.yangtools.yang.common.UnresolvedQName;
-import org.opendaylight.yangtools.yang.common.UnresolvedQName.Unqualified;
 import org.opendaylight.yangtools.yang.common.YangVersion;
 import org.opendaylight.yangtools.yang.model.api.AugmentationSchemaNode;
 import org.opendaylight.yangtools.yang.model.api.Deviation;
@@ -31,7 +28,6 @@ import org.opendaylight.yangtools.yang.model.api.Submodule;
 import org.opendaylight.yangtools.yang.model.api.TypeDefinition;
 import org.opendaylight.yangtools.yang.model.api.UsesNode;
 import org.opendaylight.yangtools.yang.model.api.YangStmtMapping;
-import org.opendaylight.yangtools.yang.model.api.meta.IdentifierNamespace;
 import org.opendaylight.yangtools.yang.model.api.meta.StatementDefinition;
 import org.opendaylight.yangtools.yang.model.api.meta.StatementOrigin;
 import org.opendaylight.yangtools.yang.model.api.stmt.ModuleEffectiveStatement;
@@ -53,21 +49,6 @@ abstract class AbstractOperationsModule implements Module, ModuleEffectiveStatem
         return StatementOrigin.CONTEXT;
     }
 
-    @Override
-    public final <K, V, N extends IdentifierNamespace<K, V>> Optional<V> get(final Class<N> namespace,
-            final K identifier) {
-        return Optional.empty();
-    }
-
-    @Override
-    public final <K, V, N extends IdentifierNamespace<K, V>> Map<K, V> getAll(final Class<N> namespace) {
-        return Map.of();
-    }
-
-    @Override
-    public final Unqualified argument() {
-        return UnresolvedQName.unqualified(getName());
-    }
 
     @Override
     public final QNameModule localQNameModule() {

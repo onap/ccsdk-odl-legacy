@@ -12,7 +12,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
-import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.restconf.rev131019.restconf.restconf.modules.Module.Revision;
+import org.opendaylight.yangtools.yang.common.Revision;
+
 
 public class ModuleRevisionBuilderTest {
 
@@ -22,7 +23,6 @@ public class ModuleRevisionBuilderTest {
         assertNotNull(moduleRevisionBuilder);
         final Revision revision = ModuleRevisionBuilder.getDefaultInstance("");
         assertNotNull(revision);
-        assertEquals("", revision.getString());
-        assertEquals(null, revision.getRevisionIdentifier());
+        assertEquals("", revision.toString());
     }
 }

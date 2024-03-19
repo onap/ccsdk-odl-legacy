@@ -16,7 +16,7 @@ import org.opendaylight.aaa.filterchain.filters.CustomFilterAdapter;
 import org.opendaylight.aaa.web.FilterDetails;
 import org.opendaylight.aaa.web.ServletDetails;
 import org.opendaylight.aaa.web.WebContext;
-import org.opendaylight.aaa.web.WebContextBuilder;
+import org.opendaylight.aaa.web.WebContext.Builder;
 import org.opendaylight.aaa.web.WebContextSecurer;
 import org.opendaylight.aaa.web.WebServer;
 import org.opendaylight.aaa.web.servlet.ServletSupport;
@@ -37,14 +37,13 @@ public class WebInitializer {
     public WebInitializer(final WebServer webServer, final WebContextSecurer webContextSecurer,
             final ServletSupport servletSupport, final RestconfApplication webApp,
             final CustomFilterAdapterConfiguration customFilterAdapterConfig) throws ServletException {
+        Builder webContextBuilder = WebContext.builder().contextPath("/restconf").supportsSessions(false)
+            .addServlet(ServletDetails.builder().servlet(servletSupport.createHttpServletBuilder(webApp).build())
+            .addUrlPattern("/*").build())
 
-        WebContextBuilder webContextBuilder = WebContext.builder().contextPath("restconf").supportsSessions(false)
-                .addServlet(ServletDetails.builder().servlet(servletSupport.createHttpServletBuilder(webApp).build())
-                    .addUrlPattern("/*").build())
-
-                // Allows user to add javax.servlet.Filter(s) in front of REST services
-                .addFilter(FilterDetails.builder().filter(new CustomFilterAdapter(customFilterAdapterConfig))
-                    .addUrlPattern("/*").build());
+            // Allows user to add javax.servlet.Filter(s) in front of REST services
+            .addFilter(FilterDetails.builder().filter(new CustomFilterAdapter(customFilterAdapterConfig))
+            .addUrlPattern("/*").build());
 
         webContextSecurer.requireAuthentication(webContextBuilder, "/*");
 

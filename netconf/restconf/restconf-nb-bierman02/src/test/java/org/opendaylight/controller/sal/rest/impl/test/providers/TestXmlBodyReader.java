@@ -207,11 +207,11 @@ public class TestXmlBodyReader extends AbstractBodyReaderTest {
         final Optional<DataContainerChild> contDataNodePotential = contNode.findChildByArg(new NodeIdentifier(
             QName.create(contNode.getIdentifier().getNodeType(), "cont")));
         assertTrue(contDataNodePotential.isPresent());
-        final ContainerNode contDataNode = (ContainerNode) contDataNodePotential.get();
+        final ContainerNode contDataNode = (ContainerNode) contDataNodePotential.orElseThrow();
         final Optional<DataContainerChild> leafDataNode = contDataNode.findChildByArg(new NodeIdentifier(
             QName.create(contDataNode.getIdentifier().getNodeType(), "lf")));
         assertTrue(leafDataNode.isPresent());
-        assertTrue("lf-test".equalsIgnoreCase(leafDataNode.get().body().toString()));
+        assertTrue("lf-test".equalsIgnoreCase(leafDataNode.orElseThrow().body().toString()));
     }
 
     private static void checkExpectValueNormalizeNodeContext(final DataSchemaNode dataSchemaNode,

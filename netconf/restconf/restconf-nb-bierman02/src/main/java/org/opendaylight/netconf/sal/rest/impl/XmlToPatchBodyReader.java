@@ -107,7 +107,7 @@ public class XmlToPatchBodyReader extends AbstractIdentifierAwareJaxRsProvider i
                 return new PatchContext(path, null, null);
             }
 
-            final Document doc = UntrustedXML.newDocumentBuilder().parse(nonEmptyInputStreamOptional.get());
+            final Document doc = UntrustedXML.newDocumentBuilder().parse(nonEmptyInputStreamOptional.orElseThrow());
             return parse(path, doc);
         } catch (final RestconfDocumentedException e) {
             throw e;

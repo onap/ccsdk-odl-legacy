@@ -12,8 +12,8 @@
     <parent>
         <groupId>org.opendaylight.netconf</groupId>
         <artifactId>feature-parent</artifactId>
-        <version>4.0.4</version>
-        <relativePath>../../parent</relativePath>
+        <version>5.0.7</version>
+        <relativePath/>
     </parent>
 
     <groupId>org.onap.ccsdk.odl-legacy.netconf</groupId>

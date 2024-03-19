@@ -136,8 +136,6 @@ public final class Notificator {
     /**
      * Delete {@link ListenerAdapter} listener specified in parameter.
      *
-     * @param <T>
-     *
      * @param listener
      *            ListenerAdapter
      */

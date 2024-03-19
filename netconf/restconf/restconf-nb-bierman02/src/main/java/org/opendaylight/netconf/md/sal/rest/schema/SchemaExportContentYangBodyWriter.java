@@ -45,7 +45,7 @@ public class SchemaExportContentYangBodyWriter implements MessageBodyWriter<Sche
             final MultivaluedMap<String, Object> httpHeaders, final OutputStream entityStream) throws IOException,
             WebApplicationException {
         final SourceIdentifier sourceId = new SourceIdentifier(context.getModule().getName(),
-                context.getModule().getQNameModule().getRevision().get());
+                context.getModule().getQNameModule().getRevision().orElseThrow());
         final YangTextSchemaSource yangTextSchemaSource;
         try {
             yangTextSchemaSource = context.getSourceProvider().getSource(sourceId).get();

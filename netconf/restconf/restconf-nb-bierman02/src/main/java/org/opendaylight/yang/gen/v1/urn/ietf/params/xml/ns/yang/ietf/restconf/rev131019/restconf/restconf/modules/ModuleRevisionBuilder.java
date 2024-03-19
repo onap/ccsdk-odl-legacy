@@ -7,7 +7,7 @@
  */
 package org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.restconf.rev131019.restconf.restconf.modules;
 
-import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.restconf.rev131019.restconf.restconf.modules.Module.Revision;
+import org.opendaylight.yangtools.yang.common.Revision;
 
 /**
  * The purpose of generated class in src/main/java for Union types is to create

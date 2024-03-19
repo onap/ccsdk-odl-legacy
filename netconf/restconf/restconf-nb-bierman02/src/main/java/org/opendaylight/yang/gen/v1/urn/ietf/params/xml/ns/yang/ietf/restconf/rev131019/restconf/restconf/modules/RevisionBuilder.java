@@ -9,8 +9,8 @@ package org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.restconf.r
 
 import java.util.regex.Pattern;
 
-import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.restconf.rev131019.RevisionIdentifier;
-import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.restconf.rev131019.restconf.restconf.modules.Module.Revision;
+
+import org.opendaylight.yangtools.yang.common.Revision;
 
 /**
 **/
@@ -26,11 +26,10 @@ public class RevisionBuilder {
 
         if (defaultValue != null) {
             if (REVISION_PATTERN.matcher(defaultValue).matches()) {
-                RevisionIdentifier id = new RevisionIdentifier(defaultValue);
-                return new Revision(id);
+                return Revision.of(defaultValue);
             }
             if (defaultValue.isEmpty()) {
-                return new Revision(defaultValue);
+                return Revision.of(defaultValue);
             }
         }
 

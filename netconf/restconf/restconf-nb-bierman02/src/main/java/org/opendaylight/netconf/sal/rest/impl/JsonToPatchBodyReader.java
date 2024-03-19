@@ -114,7 +114,7 @@ public class JsonToPatchBodyReader extends AbstractIdentifierAwareJaxRsProvider
             return new PatchContext(path, null, null);
         }
 
-        final JsonReader jsonReader = new JsonReader(new InputStreamReader(nonEmptyInputStreamOptional.get(),
+        final JsonReader jsonReader = new JsonReader(new InputStreamReader(nonEmptyInputStreamOptional.orElseThrow(),
                 StandardCharsets.UTF_8));
         AtomicReference<String> patchId = new AtomicReference<>();
         final List<PatchEntity> resultList = read(jsonReader, path, patchId);

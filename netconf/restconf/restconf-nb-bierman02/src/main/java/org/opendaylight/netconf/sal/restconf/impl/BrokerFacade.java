@@ -81,11 +81,10 @@ import org.opendaylight.yangtools.yang.data.api.schema.UserMapNode;
 import org.opendaylight.yangtools.yang.data.api.schema.builder.CollectionNodeBuilder;
 import org.opendaylight.yangtools.yang.data.api.schema.builder.DataContainerNodeBuilder;
 import org.opendaylight.yangtools.yang.data.api.schema.builder.NormalizedNodeBuilder;
+import org.opendaylight.yangtools.yang.data.impl.schema.Builders;
 import org.opendaylight.yangtools.yang.data.impl.schema.ImmutableNodes;
-import org.opendaylight.yangtools.yang.data.impl.schema.SchemaAwareBuilders;
 import org.opendaylight.yangtools.yang.data.util.DataSchemaContextNode;
 import org.opendaylight.yangtools.yang.data.util.DataSchemaContextTree;
-import org.opendaylight.yangtools.yang.model.api.ContainerSchemaNode;
 import org.opendaylight.yangtools.yang.model.api.DataSchemaNode;
 import org.opendaylight.yangtools.yang.model.api.EffectiveModelContext;
 import org.opendaylight.yangtools.yang.model.api.LeafListSchemaNode;
@@ -186,7 +185,7 @@ public class BrokerFacade implements Closeable {
             final String withDefa) {
         final Optional<DOMDataBroker> domDataBrokerService = mountPoint.getService(DOMDataBroker.class);
         if (domDataBrokerService.isPresent()) {
-            try (DOMDataTreeReadTransaction tx = domDataBrokerService.get().newReadOnlyTransaction()) {
+            try (DOMDataTreeReadTransaction tx = domDataBrokerService.orElseThrow().newReadOnlyTransaction()) {
                 return readDataViaTransaction(tx, CONFIGURATION, path, withDefa);
             }
         }
@@ -218,7 +217,7 @@ public class BrokerFacade implements Closeable {
     public NormalizedNode readOperationalData(final DOMMountPoint mountPoint, final YangInstanceIdentifier path) {
         final Optional<DOMDataBroker> domDataBrokerService = mountPoint.getService(DOMDataBroker.class);
         if (domDataBrokerService.isPresent()) {
-            try (DOMDataTreeReadTransaction tx = domDataBrokerService.get().newReadOnlyTransaction()) {
+            try (DOMDataTreeReadTransaction tx = domDataBrokerService.orElseThrow().newReadOnlyTransaction()) {
                 return readDataViaTransaction(tx, OPERATIONAL, path);
             }
         }
@@ -290,7 +289,7 @@ public class BrokerFacade implements Closeable {
         final Optional<DOMDataBroker> domDataBrokerService = mountPoint.getService(DOMDataBroker.class);
         if (domDataBrokerService.isPresent()) {
             final DOMDataTreeReadWriteTransaction newReadWriteTransaction =
-                    domDataBrokerService.get().newReadWriteTransaction();
+                    domDataBrokerService.orElseThrow().newReadWriteTransaction();
             final Status status = readDataViaTransaction(newReadWriteTransaction, CONFIGURATION, path) != null
                     ? Status.OK : Status.CREATED;
             final FluentFuture<? extends CommitInfo> future = putDataViaTransaction(
@@ -318,7 +317,7 @@ public class BrokerFacade implements Closeable {
             final Optional<DOMDataBroker> optional = mountPoint.getService(DOMDataBroker.class);
 
             if (optional.isPresent()) {
-                patchTransaction = optional.get().newReadWriteTransaction();
+                patchTransaction = optional.orElseThrow().newReadWriteTransaction();
             } else {
                 // if mount point does not have broker it is not possible to continue and global error is reported
                 LOG.error("Http Patch {} has failed - device {} does not support broker service",
@@ -474,7 +473,8 @@ public class BrokerFacade implements Closeable {
         final Optional<DOMDataBroker> domDataBrokerService = mountPoint.getService(DOMDataBroker.class);
         if (domDataBrokerService.isPresent()) {
             FluentFuture<? extends CommitInfo> future =
-                    postDataViaTransaction(domDataBrokerService.get().newReadWriteTransaction(), CONFIGURATION, path,
+                    postDataViaTransaction(domDataBrokerService.orElseThrow().newReadWriteTransaction(),
+                     CONFIGURATION, path,
                                            payload, modelContext(mountPoint), insert, point);
             isMounted.remove();
             return future;
@@ -492,14 +492,15 @@ public class BrokerFacade implements Closeable {
             final DOMMountPoint mountPoint, final YangInstanceIdentifier path) {
         final Optional<DOMDataBroker> domDataBrokerService = mountPoint.getService(DOMDataBroker.class);
         if (domDataBrokerService.isPresent()) {
-            return deleteDataViaTransaction(domDataBrokerService.get().newReadWriteTransaction(), CONFIGURATION, path);
+            return deleteDataViaTransaction(domDataBrokerService.orElseThrow().newReadWriteTransaction(),
+              CONFIGURATION, path);
         }
         throw dataBrokerUnavailable(path);
     }
 
     // RPC
     public ListenableFuture<? extends DOMRpcResult> invokeRpc(final @NonNull QName type,
-            final @NonNull NormalizedNode input) {
+            final @NonNull ContainerNode input) {
         if (rpcService == null) {
             throw new RestconfDocumentedException(Status.SERVICE_UNAVAILABLE);
         }
@@ -568,13 +569,13 @@ public class BrokerFacade implements Closeable {
         final DataSchemaNode baseSchemaNode = baseSchemaCtxTree.findChild(path).orElseThrow().getDataSchemaNode();
         if (result instanceof ContainerNode) {
             final DataContainerNodeBuilder<NodeIdentifier, ContainerNode> builder =
-                SchemaAwareBuilders.containerBuilder((ContainerSchemaNode) baseSchemaNode);
+                Builders.containerBuilder();
             buildCont(builder, (ContainerNode) result, baseSchemaCtxTree, path, trim);
             return builder.build();
         }
 
         final DataContainerNodeBuilder<NodeIdentifierWithPredicates, MapEntryNode> builder =
-            SchemaAwareBuilders.mapEntryBuilder((ListSchemaNode) baseSchemaNode);
+            Builders.mapEntryBuilder();
         buildMapEntryBuilder(builder, (MapEntryNode) result, baseSchemaCtxTree, path, trim,
             ((ListSchemaNode) baseSchemaNode).getKeyDefinition());
         return builder.build();
@@ -589,12 +590,12 @@ public class BrokerFacade implements Closeable {
             final DataSchemaNode childSchema = baseSchemaCtxTree.findChild(path).orElseThrow().getDataSchemaNode();
             if (child instanceof ContainerNode) {
                 final DataContainerNodeBuilder<NodeIdentifier, ContainerNode> childBuilder =
-                        SchemaAwareBuilders.containerBuilder((ContainerSchemaNode) childSchema);
+                        Builders.containerBuilder();
                 buildCont(childBuilder, (ContainerNode) child, baseSchemaCtxTree, path, trim);
                 builder.withChild(childBuilder.build());
             } else if (child instanceof MapNode) {
                 final CollectionNodeBuilder<MapEntryNode, SystemMapNode> childBuilder =
-                        SchemaAwareBuilders.mapBuilder((ListSchemaNode) childSchema);
+                        Builders.mapBuilder();
                 buildList(childBuilder, (MapNode) child, baseSchemaCtxTree, path, trim,
                         ((ListSchemaNode) childSchema).getKeyDefinition());
                 builder.withChild(childBuilder.build());
@@ -602,7 +603,7 @@ public class BrokerFacade implements Closeable {
                 final Object defaultVal = ((LeafSchemaNode) childSchema).getType().getDefaultValue().orElse(null);
                 final Object nodeVal = child.body();
                 final NormalizedNodeBuilder<NodeIdentifier, Object, LeafNode<Object>> leafBuilder =
-                        SchemaAwareBuilders.leafBuilder((LeafSchemaNode) childSchema);
+                        Builders.leafBuilder();
                 if (keys.contains(child.getIdentifier().getNodeType())) {
                     leafBuilder.withValue(child.body());
                     builder.withChild(leafBuilder.build());
@@ -628,10 +629,10 @@ public class BrokerFacade implements Closeable {
             final List<QName> keys) {
         for (final MapEntryNode mapEntryNode : result.body()) {
             final YangInstanceIdentifier actualNode = path.node(mapEntryNode.getIdentifier());
-            final DataSchemaNode childSchema = baseSchemaCtxTree.findChild(actualNode).orElseThrow()
-                    .getDataSchemaNode();
+            // final DataSchemaNode childSchema = baseSchemaCtxTree.findChild(actualNode).orElseThrow()
+            //         .getDataSchemaNode();
             final DataContainerNodeBuilder<NodeIdentifierWithPredicates, MapEntryNode> mapEntryBuilder =
-                    SchemaAwareBuilders.mapEntryBuilder((ListSchemaNode) childSchema);
+                    Builders.mapEntryBuilder();
             buildMapEntryBuilder(mapEntryBuilder, mapEntryNode, baseSchemaCtxTree, actualNode, trim, keys);
             builder.withChild(mapEntryBuilder.build());
         }
@@ -645,12 +646,12 @@ public class BrokerFacade implements Closeable {
             final DataSchemaNode childSchema = baseSchemaCtxTree.findChild(path).orElseThrow().getDataSchemaNode();
             if (child instanceof ContainerNode) {
                 final DataContainerNodeBuilder<NodeIdentifier, ContainerNode> builderChild =
-                        SchemaAwareBuilders.containerBuilder((ContainerSchemaNode) childSchema);
+                        Builders.containerBuilder();
                 buildCont(builderChild, result, baseSchemaCtxTree, actualPath, trim);
                 builder.withChild(builderChild.build());
             } else if (child instanceof MapNode) {
                 final CollectionNodeBuilder<MapEntryNode, SystemMapNode> childBuilder =
-                        SchemaAwareBuilders.mapBuilder((ListSchemaNode) childSchema);
+                        Builders.mapBuilder();
                 buildList(childBuilder, (MapNode) child, baseSchemaCtxTree, path, trim,
                         ((ListSchemaNode) childSchema).getKeyDefinition());
                 builder.withChild(childBuilder.build());
@@ -658,7 +659,7 @@ public class BrokerFacade implements Closeable {
                 final Object defaultVal = ((LeafSchemaNode) childSchema).getType().getDefaultValue().orElse(null);
                 final Object nodeVal = child.body();
                 final NormalizedNodeBuilder<NodeIdentifier, Object, LeafNode<Object>> leafBuilder =
-                        SchemaAwareBuilders.leafBuilder((LeafSchemaNode) childSchema);
+                        Builders.leafBuilder();
                 if (trim) {
                     if (defaultVal == null || !defaultVal.equals(nodeVal)) {
                         leafBuilder.withValue(child.body());

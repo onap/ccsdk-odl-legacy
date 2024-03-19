@@ -67,11 +67,10 @@ import org.opendaylight.yangtools.yang.data.api.schema.LeafSetNode;
 import org.opendaylight.yangtools.yang.data.api.schema.MapEntryNode;
 import org.opendaylight.yangtools.yang.data.api.schema.NormalizedNode;
 import org.opendaylight.yangtools.yang.data.api.schema.builder.DataContainerNodeBuilder;
-import org.opendaylight.yangtools.yang.data.impl.schema.SchemaAwareBuilders;
+import org.opendaylight.yangtools.yang.data.impl.schema.Builders;
 import org.opendaylight.yangtools.yang.model.api.DataSchemaNode;
 import org.opendaylight.yangtools.yang.model.api.EffectiveModelContext;
 import org.opendaylight.yangtools.yang.model.api.InputSchemaNode;
-import org.opendaylight.yangtools.yang.model.api.LeafSchemaNode;
 import org.opendaylight.yangtools.yang.model.api.ListSchemaNode;
 import org.opendaylight.yangtools.yang.model.api.Module;
 import org.opendaylight.yangtools.yang.model.api.OutputSchemaNode;
@@ -189,7 +188,7 @@ public class RestconfImplTest {
         final DOMRpcService rpcService = mock(DOMRpcService.class);
         doReturn(Optional.of(rpcService)).when(mount).getService(DOMRpcService.class);
         doReturn(immediateFluentFuture(mock(DOMRpcResult.class))).when(rpcService)
-                .invokeRpc(any(QName.class), any(NormalizedNode.class));
+                .invokeRpc(any(QName.class), any(ContainerNode.class));
         restconfImpl.invokeRpc("randomId", ctx, uriInfo);
         restconfImpl.invokeRpc("ietf-netconf", ctx, uriInfo);
         verify(rpcService, times(2)).invokeRpc(any(QName.class), any());
@@ -240,18 +239,18 @@ public class RestconfImplTest {
                 .getRestconfModuleRestConfSchemaNode(restconfModule, Draft02.RestConfModule.STREAM_LIST_SCHEMA_NODE);
         final ListSchemaNode listStreamSchemaNode = (ListSchemaNode) streamSchemaNode;
         final DataContainerNodeBuilder<NodeIdentifierWithPredicates, MapEntryNode> streamNodeValues =
-            SchemaAwareBuilders.mapEntryBuilder(listStreamSchemaNode);
+            Builders.mapEntryBuilder();
         var instanceDataChildrenByName =
                 ControllerContext.findInstanceDataChildrenByName(listStreamSchemaNode, "name");
         final DataSchemaNode nameSchemaNode = instanceDataChildrenByName.get(0).child;
-        streamNodeValues.withChild(SchemaAwareBuilders.leafBuilder((LeafSchemaNode) nameSchemaNode)
+        streamNodeValues.withChild(Builders.leafBuilder()
             .withValue("")
             .build());
 
         instanceDataChildrenByName =
                 ControllerContext.findInstanceDataChildrenByName(listStreamSchemaNode, "description");
         final DataSchemaNode descriptionSchemaNode = instanceDataChildrenByName.get(0).child;
-        streamNodeValues.withChild(SchemaAwareBuilders.leafBuilder((LeafSchemaNode) nameSchemaNode)
+        streamNodeValues.withChild(Builders.leafBuilder()
             .withValue("DESCRIPTION_PLACEHOLDER")
             .build());
 
@@ -259,17 +258,17 @@ public class RestconfImplTest {
                 ControllerContext.findInstanceDataChildrenByName(listStreamSchemaNode, "replay-support");
         final DataSchemaNode replaySupportSchemaNode = instanceDataChildrenByName.get(0).child;
         streamNodeValues.withChild(
-            SchemaAwareBuilders.leafBuilder((LeafSchemaNode) replaySupportSchemaNode).withValue(Boolean.TRUE).build());
+            Builders.leafBuilder().withValue(Boolean.TRUE).build());
 
         instanceDataChildrenByName =
                 ControllerContext.findInstanceDataChildrenByName(listStreamSchemaNode, "replay-log-creation-time");
         final DataSchemaNode replayLogCreationTimeSchemaNode = instanceDataChildrenByName.get(0).child;
         streamNodeValues.withChild(
-            SchemaAwareBuilders.leafBuilder((LeafSchemaNode) replayLogCreationTimeSchemaNode).withValue("").build());
+            Builders.leafBuilder().withValue("").build());
         instanceDataChildrenByName = ControllerContext.findInstanceDataChildrenByName(listStreamSchemaNode, "events");
         final DataSchemaNode eventsSchemaNode = instanceDataChildrenByName.get(0).child;
         streamNodeValues.withChild(
-            SchemaAwareBuilders.leafBuilder((LeafSchemaNode) eventsSchemaNode).withValue(Empty.value()).build());
+            Builders.leafBuilder().withValue(Empty.value()).build());
         assertNotNull(streamNodeValues.build());
     }
 

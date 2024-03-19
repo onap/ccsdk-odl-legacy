@@ -222,7 +222,7 @@ public class ListenerAdapter extends AbstractCommonSubscriber implements Cluster
             return;
         }
 
-        NormalizedNode normalizedNode = optionalNormalizedNode.get();
+        NormalizedNode normalizedNode = optionalNormalizedNode.orElseThrow();
         YangInstanceIdentifier yiid = YangInstanceIdentifier.builder(parentYiid)
                                                             .append(normalizedNode.getIdentifier()).build();
 
@@ -402,7 +402,7 @@ public class ListenerAdapter extends AbstractCommonSubscriber implements Cluster
     private void writeIdentifierWithNamespacePrefix(final Element element, final StringBuilder textContent,
             final QName qualifiedName) {
         final Module module = controllerContext.getGlobalSchema().findModule(qualifiedName.getModule())
-                .get();
+                .orElseThrow();
 
         textContent.append(module.getName());
         textContent.append(":");

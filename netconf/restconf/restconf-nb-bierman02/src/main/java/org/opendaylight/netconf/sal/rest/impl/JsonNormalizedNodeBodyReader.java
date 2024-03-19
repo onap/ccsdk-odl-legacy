@@ -125,7 +125,7 @@ public class JsonNormalizedNodeBodyReader
         final JsonParserStream jsonParser = JsonParserStream.create(writer,
             JSONCodecFactorySupplier.DRAFT_LHOTKA_NETMOD_YANG_JSON_02.getShared(path.getSchemaContext()),
             parentInference);
-        final JsonReader reader = new JsonReader(new InputStreamReader(nonEmptyInputStreamOptional.get(),
+        final JsonReader reader = new JsonReader(new InputStreamReader(nonEmptyInputStreamOptional.orElseThrow(),
                 StandardCharsets.UTF_8));
         jsonParser.parse(reader);
 

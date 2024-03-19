@@ -27,12 +27,11 @@ import org.opendaylight.yangtools.yang.common.QName;
 import org.opendaylight.yangtools.yang.data.api.YangInstanceIdentifier.NodeIdentifier;
 import org.opendaylight.yangtools.yang.data.api.schema.ContainerNode;
 import org.opendaylight.yangtools.yang.data.api.schema.builder.DataContainerNodeBuilder;
-import org.opendaylight.yangtools.yang.data.impl.schema.SchemaAwareBuilders;
+import org.opendaylight.yangtools.yang.data.impl.schema.Builders;
 import org.opendaylight.yangtools.yang.model.api.ContainerSchemaNode;
 import org.opendaylight.yangtools.yang.model.api.DataNodeContainer;
 import org.opendaylight.yangtools.yang.model.api.DataSchemaNode;
 import org.opendaylight.yangtools.yang.model.api.EffectiveModelContext;
-import org.opendaylight.yangtools.yang.model.api.LeafSchemaNode;
 
 public class NnToXmlWithDataFromSeveralModulesTest extends
         AbstractBodyReaderTest {
@@ -92,8 +91,8 @@ public class NnToXmlWithDataFromSeveralModulesTest extends
     private static NormalizedNodeContext prepareNormalizedNodeContext() {
         final String rev = "2014-01-17";
 
-        final DataContainerNodeBuilder<NodeIdentifier, ContainerNode> dataContSchemaContNode = SchemaAwareBuilders
-                .containerBuilder(schemaContext);
+        final DataContainerNodeBuilder<NodeIdentifier, ContainerNode> dataContSchemaContNode = Builders
+                .containerBuilder();
 
         final DataContainerNodeBuilder<NodeIdentifier, ContainerNode> modul1 = buildContBuilderMod1(
                 "module:one", rev, "cont_m1", "contB_m1", "lf1_m1",
@@ -121,23 +120,23 @@ public class NnToXmlWithDataFromSeveralModulesTest extends
 
         final DataSchemaNode contSchemaNode = schemaContext
                 .getDataChildByName(contQname);
-        final DataContainerNodeBuilder<NodeIdentifier, ContainerNode> dataContainerNodeAttrBuilder = SchemaAwareBuilders
-                .containerBuilder((ContainerSchemaNode) contSchemaNode);
+        final DataContainerNodeBuilder<NodeIdentifier, ContainerNode> dataContainerNodeAttrBuilder = Builders
+                .containerBuilder();
 
         Preconditions.checkState(contSchemaNode instanceof ContainerSchemaNode);
         final var instanceLf1_m1 = ControllerContext.findInstanceDataChildrenByName(
                 (DataNodeContainer) contSchemaNode, lf1Qname.getLocalName());
         final DataSchemaNode schemaLf1_m1 = instanceLf1_m1.get(0).child;
 
-        dataContainerNodeAttrBuilder.withChild(SchemaAwareBuilders
-                .leafBuilder((LeafSchemaNode) schemaLf1_m1)
+        dataContainerNodeAttrBuilder.withChild(Builders
+                .leafBuilder()
                 .withValue(lf1Value).build());
 
         final DataSchemaNode contBSchemaNode = ((ContainerSchemaNode) contSchemaNode)
                 .getDataChildByName(contBQname);
 
-        final DataContainerNodeBuilder<NodeIdentifier, ContainerNode> dataContainerB = SchemaAwareBuilders
-                .containerBuilder((ContainerSchemaNode) contBSchemaNode);
+        final DataContainerNodeBuilder<NodeIdentifier, ContainerNode> dataContainerB = Builders
+                .containerBuilder();
 
         return dataContainerNodeAttrBuilder.withChild(dataContainerB.build());
     }

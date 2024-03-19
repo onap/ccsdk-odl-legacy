@@ -77,6 +77,7 @@ import org.opendaylight.yangtools.yang.common.RpcError;
 import org.opendaylight.yangtools.yang.common.RpcResultBuilder;
 import org.opendaylight.yangtools.yang.data.api.YangInstanceIdentifier;
 import org.opendaylight.yangtools.yang.data.api.YangInstanceIdentifier.NodeIdentifier;
+import org.opendaylight.yangtools.yang.data.api.schema.ContainerNode;
 import org.opendaylight.yangtools.yang.data.api.schema.NormalizedNode;
 import org.opendaylight.yangtools.yang.data.impl.schema.Builders;
 import org.opendaylight.yangtools.yang.model.api.DataSchemaNode;
@@ -183,10 +184,10 @@ public class BrokerFacadeTest {
     @Test
     public void testInvokeRpc() throws Exception {
         final DOMRpcResult expResult = mock(DOMRpcResult.class);
-        doReturn(immediateFluentFuture(expResult)).when(mockRpcService).invokeRpc(qname, dummyNode);
+        doReturn(immediateFluentFuture(expResult)).when(mockRpcService).invokeRpc(qname, (ContainerNode) dummyNode);
 
         final ListenableFuture<? extends DOMRpcResult> actualFuture = brokerFacade.invokeRpc(qname,
-            dummyNode);
+            (ContainerNode) dummyNode);
         assertNotNull("Future is null", actualFuture);
         final DOMRpcResult actualResult = actualFuture.get();
         assertSame("invokeRpc", expResult, actualResult);

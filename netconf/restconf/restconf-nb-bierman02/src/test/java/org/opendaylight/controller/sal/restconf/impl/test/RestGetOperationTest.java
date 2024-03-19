@@ -305,7 +305,7 @@ public class RestGetOperationTest extends JerseyTest {
 
         assertEquals("module2", qname.getLocalName());
         assertEquals("module:2", qname.getNamespace().toString());
-        assertEquals("2014-01-02", qname.getRevision().get().toString());
+        assertEquals("2014-01-02", qname.getRevision().orElseThrow().toString());
 
         response = target(uri).request("application/yang.api+json").get();
         assertEquals(200, response.getStatus());
@@ -453,7 +453,7 @@ public class RestGetOperationTest extends JerseyTest {
         final QName module = assertedModuleXmlToModuleQName(responseXml.getDocumentElement());
 
         assertEquals("module1-behind-mount-point", module.getLocalName());
-        assertEquals("2014-02-03", module.getRevision().get().toString());
+        assertEquals("2014-02-03", module.getRevision().orElseThrow().toString());
         assertEquals("module:1:behind:mount:point", module.getNamespace().toString());
     }
 

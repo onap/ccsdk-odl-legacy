@@ -237,14 +237,15 @@ public class JSONRestconfServiceImplTest {
         final java.util.Optional<DataContainerChild> mapChild = actualNode.findChildByArg(
             new NodeIdentifier(INTERFACE_QNAME));
         assertEquals(INTERFACE_QNAME.toString() + " present", true, mapChild.isPresent());
-        assertTrue("Expected MapNode. Actual " + mapChild.get().getClass(), mapChild.get() instanceof MapNode);
-        final MapNode mapNode = (MapNode)mapChild.get();
+        assertTrue("Expected MapNode. Actual " + mapChild.orElseThrow().getClass(),
+            mapChild.orElseThrow() instanceof MapNode);
+        final MapNode mapNode = (MapNode)mapChild.orElseThrow();
 
         final NodeIdentifierWithPredicates entryNodeID = NodeIdentifierWithPredicates.of(
                 INTERFACE_QNAME, NAME_QNAME, "eth0");
         final java.util.Optional<MapEntryNode> entryChild = mapNode.findChildByArg(entryNodeID);
         assertEquals(entryNodeID.toString() + " present", true, entryChild.isPresent());
-        final MapEntryNode entryNode = entryChild.get();
+        final MapEntryNode entryNode = entryChild.orElseThrow();
         verifyLeafNode(entryNode, NAME_QNAME, "eth0");
         verifyLeafNode(entryNode, TYPE_QNAME, "ethernetCsmacd");
         verifyLeafNode(entryNode, ENABLED_QNAME, Boolean.FALSE);
@@ -308,7 +309,7 @@ public class JSONRestconfServiceImplTest {
         final String payload = loadData("/parts/ietf-interfaces_interfaces_patch.json");
         final Optional<String> patchResult = service.patch(uriPath, payload);
 
-        assertTrue(patchResult.get().contains("\"ok\":[null]"));
+        assertTrue(patchResult.orElseThrow().contains("\"ok\":[null]"));
     }
 
     @Test
@@ -325,7 +326,7 @@ public class JSONRestconfServiceImplTest {
 
         final Optional<String> patchResult = service.patch(uriPath, payload);
 
-        assertTrue(patchResult.get().contains("\"ok\":[null]"));
+        assertTrue(patchResult.orElseThrow().contains("\"ok\":[null]"));
     }
 
     @Test(expected = OperationFailedException.class)
@@ -341,7 +342,7 @@ public class JSONRestconfServiceImplTest {
         final Optional<String> patchResult = service.patch(uriPath, payload);
 
         assertTrue("Patch output is not null", patchResult.isPresent());
-        String patch = patchResult.get();
+        String patch = patchResult.orElseThrow();
         assertTrue(patch.contains("TransactionCommitFailedException"));
     }
 
@@ -394,9 +395,9 @@ public class JSONRestconfServiceImplTest {
 
     @Test
     public void testInvokeRpcWithInput() throws Exception {
-        final DOMRpcResult expResult = new DefaultDOMRpcResult((NormalizedNode)null);
+        final DOMRpcResult expResult = new DefaultDOMRpcResult((ContainerNode)null);
         doReturn(immediateFluentFuture(expResult)).when(brokerFacade).invokeRpc(eq(MAKE_TOAST_QNAME),
-            any(NormalizedNode.class));
+            any(ContainerNode.class));
 
         final String uriPath = "toaster:make-toast";
         final String input = loadData("/full-versions/make-toast-rpc-input.json");
@@ -405,7 +406,7 @@ public class JSONRestconfServiceImplTest {
 
         assertEquals("Output present", false, output.isPresent());
 
-        final ArgumentCaptor<NormalizedNode> capturedNode = ArgumentCaptor.forClass(NormalizedNode.class);
+        final ArgumentCaptor<ContainerNode> capturedNode = ArgumentCaptor.forClass(ContainerNode.class);
         verify(brokerFacade).invokeRpc(eq(MAKE_TOAST_QNAME), capturedNode.capture());
 
         assertTrue("Expected ContainerNode. Actual " + capturedNode.getValue().getClass(),
@@ -417,7 +418,7 @@ public class JSONRestconfServiceImplTest {
 
     @Test
     public void testInvokeRpcWithNoInput() throws Exception {
-        final DOMRpcResult expResult = new DefaultDOMRpcResult((NormalizedNode)null);
+        final DOMRpcResult expResult = new DefaultDOMRpcResult((ContainerNode)null);
         doReturn(immediateFluentFuture(expResult)).when(brokerFacade).invokeRpc(any(QName.class), any());
 
         final String uriPath = "toaster:cancel-toast";
@@ -431,7 +432,7 @@ public class JSONRestconfServiceImplTest {
 
     @Test
     public void testInvokeRpcWithOutput() throws Exception {
-        final NormalizedNode outputNode = ImmutableContainerNodeBuilder.create()
+        final ContainerNode outputNode = ImmutableContainerNodeBuilder.create()
                 .withNodeIdentifier(new YangInstanceIdentifier.NodeIdentifier(TEST_OUTPUT_QNAME))
                 .withChild(ImmutableNodes.leafNode(TEXT_OUT_QNAME, "foo")).build();
         final DOMRpcResult expResult = new DefaultDOMRpcResult(outputNode);
@@ -442,8 +443,8 @@ public class JSONRestconfServiceImplTest {
         final Optional<String> output = service.invokeRpc(uriPath, Optional.empty());
 
         assertEquals("Output present", true, output.isPresent());
-        assertNotNull("Returned null response", output.get());
-        assertThat("Missing \"textOut\"", output.get(), containsString("\"textOut\":\"foo\""));
+        assertNotNull("Returned null response", output.orElseThrow());
+        assertThat("Missing \"textOut\"", output.orElseThrow(), containsString("\"textOut\":\"foo\""));
 
         verify(brokerFacade).invokeRpc(eq(TEST_OUTPUT_QNAME), any());
     }
@@ -452,7 +453,7 @@ public class JSONRestconfServiceImplTest {
     public void testInvokeRpcFailure() throws Exception {
         final DOMRpcException exception = new DOMRpcImplementationNotAvailableException("testExeption");
         doReturn(immediateFailedFluentFuture(exception)).when(brokerFacade).invokeRpc(any(QName.class),
-                any(NormalizedNode.class));
+                any(ContainerNode.class));
 
         final String uriPath = "toaster:cancel-toast";
 
@@ -478,7 +479,7 @@ public class JSONRestconfServiceImplTest {
 
         final Optional<String> optionalResp = service.get(uriPath, datastoreType);
         assertEquals("Response present", true, optionalResp.isPresent());
-        final String jsonResp = optionalResp.get();
+        final String jsonResp = optionalResp.orElseThrow();
 
         assertNotNull("Returned null response", jsonResp);
         assertThat("Missing \"name\"", jsonResp, containsString("\"name\":\"eth0\""));
@@ -501,7 +502,7 @@ public class JSONRestconfServiceImplTest {
     void verifyLeafNode(final DataContainerNode parent, final QName leafType, final Object leafValue) {
         final java.util.Optional<DataContainerChild> leafChild = parent.findChildByArg(new NodeIdentifier(leafType));
         assertTrue(leafType.toString() + " present", leafChild.isPresent());
-        assertEquals(leafType.toString() + " value", leafValue, leafChild.get().body());
+        assertEquals(leafType.toString() + " value", leafValue, leafChild.orElseThrow().body());
     }
 
     void verifyPath(final YangInstanceIdentifier path, final Object... expArgs) {

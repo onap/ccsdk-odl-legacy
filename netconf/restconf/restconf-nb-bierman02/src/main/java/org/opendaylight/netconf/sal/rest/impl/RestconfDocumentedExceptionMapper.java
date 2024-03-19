@@ -54,8 +54,8 @@ import org.opendaylight.yangtools.yang.data.codec.gson.JSONCodecFactorySupplier;
 import org.opendaylight.yangtools.yang.data.codec.gson.JSONNormalizedNodeStreamWriter;
 import org.opendaylight.yangtools.yang.data.codec.gson.JsonWriterFactory;
 import org.opendaylight.yangtools.yang.data.codec.xml.XMLStreamNormalizedNodeStreamWriter;
+import org.opendaylight.yangtools.yang.data.impl.schema.Builders;
 import org.opendaylight.yangtools.yang.data.impl.schema.ImmutableNodes;
-import org.opendaylight.yangtools.yang.data.impl.schema.SchemaAwareBuilders;
 import org.opendaylight.yangtools.yang.model.api.DataSchemaNode;
 import org.opendaylight.yangtools.yang.model.api.LeafSchemaNode;
 import org.opendaylight.yangtools.yang.model.api.ListSchemaNode;
@@ -123,14 +123,14 @@ public class RestconfDocumentedExceptionMapper implements ExceptionMapper<Restco
 
         final var errorsSchemaNode = errorsEntry.getValue();
         final DataContainerNodeBuilder<NodeIdentifier, ContainerNode> errContBuild =
-                SchemaAwareBuilders.containerBuilder(errorsSchemaNode);
+                Builders.containerBuilder();
 
         final var schemaList = ControllerContext.findInstanceDataChildrenByName(errorsSchemaNode,
                 Draft02.RestConfModule.ERROR_LIST_SCHEMA_NODE);
         final DataSchemaNode errListSchemaNode = ControllerContext.getFirst(schemaList);
         checkState(errListSchemaNode instanceof ListSchemaNode, "Found Error SchemaNode isn't ListSchemaNode");
-        final CollectionNodeBuilder<MapEntryNode, SystemMapNode> listErorsBuilder = SchemaAwareBuilders
-                .mapBuilder((ListSchemaNode) errListSchemaNode);
+        final CollectionNodeBuilder<MapEntryNode, SystemMapNode> listErorsBuilder = Builders
+                .mapBuilder();
 
 
         for (final RestconfError error : errors) {
@@ -155,21 +155,21 @@ public class RestconfDocumentedExceptionMapper implements ExceptionMapper<Restco
         checkArgument(errListSchemaNode instanceof ListSchemaNode,
                 "errListSchemaNode has to be of type ListSchemaNode");
         final ListSchemaNode listStreamSchemaNode = (ListSchemaNode) errListSchemaNode;
-        final DataContainerNodeBuilder<NodeIdentifierWithPredicates, MapEntryNode> errNodeValues = SchemaAwareBuilders
-                .mapEntryBuilder(listStreamSchemaNode);
+        final DataContainerNodeBuilder<NodeIdentifierWithPredicates, MapEntryNode> errNodeValues = Builders
+                .mapEntryBuilder();
 
         var lsChildDataSchemaNode = ControllerContext.findInstanceDataChildrenByName(
                 listStreamSchemaNode, "error-type");
         final DataSchemaNode errTypSchemaNode = ControllerContext.getFirst(lsChildDataSchemaNode);
         checkState(errTypSchemaNode instanceof LeafSchemaNode);
-        errNodeValues.withChild(SchemaAwareBuilders.leafBuilder((LeafSchemaNode) errTypSchemaNode)
+        errNodeValues.withChild(Builders.leafBuilder()
                 .withValue(error.getErrorType().elementBody()).build());
 
         lsChildDataSchemaNode = ControllerContext.findInstanceDataChildrenByName(
                 listStreamSchemaNode, "error-tag");
         final DataSchemaNode errTagSchemaNode = ControllerContext.getFirst(lsChildDataSchemaNode);
         checkState(errTagSchemaNode instanceof LeafSchemaNode);
-        errNodeValues.withChild(SchemaAwareBuilders.leafBuilder((LeafSchemaNode) errTagSchemaNode)
+        errNodeValues.withChild(Builders.leafBuilder()
                 .withValue(error.getErrorTag().elementBody()).build());
 
         if (error.getErrorAppTag() != null) {
@@ -177,7 +177,7 @@ public class RestconfDocumentedExceptionMapper implements ExceptionMapper<Restco
                     listStreamSchemaNode, "error-app-tag");
             final DataSchemaNode errAppTagSchemaNode = ControllerContext.getFirst(lsChildDataSchemaNode);
             checkState(errAppTagSchemaNode instanceof LeafSchemaNode);
-            errNodeValues.withChild(SchemaAwareBuilders.leafBuilder((LeafSchemaNode) errAppTagSchemaNode)
+            errNodeValues.withChild(Builders.leafBuilder()
                     .withValue(error.getErrorAppTag()).build());
         }
 
@@ -185,7 +185,7 @@ public class RestconfDocumentedExceptionMapper implements ExceptionMapper<Restco
                 listStreamSchemaNode, "error-message");
         final DataSchemaNode errMsgSchemaNode = ControllerContext.getFirst(lsChildDataSchemaNode);
         checkState(errMsgSchemaNode instanceof LeafSchemaNode);
-        errNodeValues.withChild(SchemaAwareBuilders.leafBuilder((LeafSchemaNode) errMsgSchemaNode)
+        errNodeValues.withChild(Builders.leafBuilder()
                 .withValue(error.getErrorMessage()).build());
 
         if (error.getErrorInfo() != null) {

@@ -55,10 +55,9 @@ import org.opendaylight.yangtools.yang.common.XMLNamespace;
 import org.opendaylight.yangtools.yang.data.api.YangInstanceIdentifier.NodeIdentifier;
 import org.opendaylight.yangtools.yang.data.api.schema.ContainerNode;
 import org.opendaylight.yangtools.yang.data.api.schema.LeafNode;
-import org.opendaylight.yangtools.yang.data.api.schema.NormalizedNode;
 import org.opendaylight.yangtools.yang.data.api.schema.builder.DataContainerNodeBuilder;
 import org.opendaylight.yangtools.yang.data.api.schema.builder.NormalizedNodeBuilder;
-import org.opendaylight.yangtools.yang.data.impl.schema.SchemaAwareBuilders;
+import org.opendaylight.yangtools.yang.data.impl.schema.Builders;
 import org.opendaylight.yangtools.yang.model.api.ContainerLike;
 import org.opendaylight.yangtools.yang.model.api.ContainerSchemaNode;
 import org.opendaylight.yangtools.yang.model.api.DataSchemaNode;
@@ -131,19 +130,19 @@ public class InvokeRpcMethodTest {
         assertNotNull(rpcSchemaNode);
         final InputSchemaNode rpcInputSchemaNode = rpcSchemaNode.getInput();
         final DataContainerNodeBuilder<NodeIdentifier, ContainerNode> container =
-                SchemaAwareBuilders.containerBuilder(rpcInputSchemaNode);
+                Builders.containerBuilder();
 
         final QName contQName = QName.create(rpcModule.getQNameModule(), "cont");
         final DataSchemaNode contSchemaNode = rpcInputSchemaNode.getDataChildByName(contQName);
         assertTrue(contSchemaNode instanceof ContainerSchemaNode);
         final DataContainerNodeBuilder<NodeIdentifier, ContainerNode> contNode =
-                SchemaAwareBuilders.containerBuilder((ContainerSchemaNode) contSchemaNode);
+                Builders.containerBuilder();
 
         final QName lfQName = QName.create(rpcModule.getQNameModule(), "lf");
         final DataSchemaNode lfSchemaNode = ((ContainerSchemaNode) contSchemaNode).getDataChildByName(lfQName);
         assertTrue(lfSchemaNode instanceof LeafSchemaNode);
         final LeafNode<Object> lfNode =
-                SchemaAwareBuilders.leafBuilder((LeafSchemaNode) lfSchemaNode).withValue("any value").build();
+                Builders.leafBuilder().withValue("any value").build();
         contNode.withChild(lfNode);
         container.withChild(contNode.build());
 
@@ -178,11 +177,11 @@ public class InvokeRpcMethodTest {
         assertNotNull("getErrorMessage is null", actual.getErrorMessage());
 
         if (expErrorMsg.isPresent()) {
-            assertEquals("getErrorMessage", expErrorMsg.get(), actual.getErrorMessage());
+            assertEquals("getErrorMessage", expErrorMsg.orElseThrow(), actual.getErrorMessage());
         }
 
         if (expAppTag.isPresent()) {
-            assertEquals("getErrorAppTag", expAppTag.get(), actual.getErrorAppTag());
+            assertEquals("getErrorAppTag", expAppTag.orElseThrow(), actual.getErrorAppTag());
         }
     }
 
@@ -211,7 +210,7 @@ public class InvokeRpcMethodTest {
 
     @Test
     public void testInvokeRpcWithNoPayload_Success() {
-        final NormalizedNode resultObj = null;
+        final ContainerNode resultObj = null;
         final DOMRpcResult expResult = new DefaultDOMRpcResult(resultObj);
 
         final QName qname = QName.create("(http://netconfcentral.org/ns/toaster?revision=2009-11-20)cancel-toast");
@@ -270,9 +269,9 @@ public class InvokeRpcMethodTest {
 
         final NormalizedNodeContext payload = new NormalizedNodeContext(
                 InstanceIdentifierContext.ofLocalRpcInput(schemaContext, rpcDef),
-                SchemaAwareBuilders.containerBuilder(rpcDef.getInput()).build());
+                Builders.containerBuilder().build());
 
-        doReturn(immediateFluentFuture(expResult)).when(brokerFacade).invokeRpc(eq(path), any(NormalizedNode.class));
+        doReturn(immediateFluentFuture(expResult)).when(brokerFacade).invokeRpc(eq(path), any(ContainerNode.class));
 
         final NormalizedNodeContext output = restconfImpl.invokeRpc("toaster:make-toast", payload, uriInfo);
         assertNotNull(output);
@@ -309,12 +308,12 @@ public class InvokeRpcMethodTest {
         assertNotNull(rpcDef);
         assertNotNull(rpcOutputSchemaNode);
         final DataContainerNodeBuilder<NodeIdentifier, ContainerNode> containerBuilder =
-                SchemaAwareBuilders.containerBuilder(rpcOutputSchemaNode);
+                Builders.containerBuilder();
         final DataSchemaNode leafSchema = rpcOutputSchemaNode
                 .getDataChildByName(QName.create(rpcModule.getQNameModule(), "textOut"));
         assertTrue(leafSchema instanceof LeafSchemaNode);
         final NormalizedNodeBuilder<NodeIdentifier, Object, LeafNode<Object>> leafBuilder =
-                SchemaAwareBuilders.leafBuilder((LeafSchemaNode) leafSchema);
+                Builders.leafBuilder();
         leafBuilder.withValue("brm");
         containerBuilder.withChild(leafBuilder.build());
         final ContainerNode container = containerBuilder.build();

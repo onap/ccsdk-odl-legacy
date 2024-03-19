@@ -168,13 +168,13 @@ public class TestJsonBodyReader extends AbstractBodyReaderTest {
             QName.create(inputNode.getIdentifier().getNodeType(), "cont"));
         final Optional<DataContainerChild> contDataNode = inputNode.findChildByArg(yangCont.getLastPathArgument());
         assertTrue(contDataNode.isPresent());
-        assertTrue(contDataNode.get() instanceof ContainerNode);
+        assertTrue(contDataNode.orElseThrow() instanceof ContainerNode);
         final YangInstanceIdentifier yangleaf = YangInstanceIdentifier.of(
             QName.create(inputNode.getIdentifier().getNodeType(), "lf"));
-        final Optional<DataContainerChild> leafDataNode = ((ContainerNode) contDataNode.get())
+        final Optional<DataContainerChild> leafDataNode = ((ContainerNode) contDataNode.orElseThrow())
                 .findChildByArg(yangleaf.getLastPathArgument());
         assertTrue(leafDataNode.isPresent());
-        assertTrue("lf-test".equalsIgnoreCase(leafDataNode.get().body().toString()));
+        assertTrue("lf-test".equalsIgnoreCase(leafDataNode.orElseThrow().body().toString()));
     }
 
     private static void checkExpectValueNormalizeNodeContext(final DataSchemaNode dataSchemaNode,

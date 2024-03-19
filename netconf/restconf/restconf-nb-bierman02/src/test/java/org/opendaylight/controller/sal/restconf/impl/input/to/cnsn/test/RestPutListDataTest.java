@@ -46,7 +46,7 @@ import org.opendaylight.yangtools.yang.data.api.schema.MapEntryNode;
 import org.opendaylight.yangtools.yang.data.api.schema.NormalizedNode;
 import org.opendaylight.yangtools.yang.data.api.schema.builder.DataContainerNodeBuilder;
 import org.opendaylight.yangtools.yang.data.api.schema.builder.NormalizedNodeBuilder;
-import org.opendaylight.yangtools.yang.data.impl.schema.SchemaAwareBuilders;
+import org.opendaylight.yangtools.yang.data.impl.schema.Builders;
 import org.opendaylight.yangtools.yang.data.impl.schema.builder.impl.valid.DataValidationException;
 import org.opendaylight.yangtools.yang.model.api.DataSchemaNode;
 import org.opendaylight.yangtools.yang.model.api.EffectiveModelContext;
@@ -176,7 +176,7 @@ public class RestPutListDataTest {
         assertTrue(testNodeSchemaNode != null);
         assertTrue(testNodeSchemaNode instanceof ListSchemaNode);
         final DataContainerNodeBuilder<NodeIdentifierWithPredicates, MapEntryNode> testNodeContainer =
-            SchemaAwareBuilders.mapEntryBuilder((ListSchemaNode) testNodeSchemaNode);
+            Builders.mapEntryBuilder();
 
         var testChildren = ControllerContext.findInstanceDataChildrenByName(
                 (ListSchemaNode) testNodeSchemaNode, key1.getLocalName());
@@ -185,7 +185,7 @@ public class RestPutListDataTest {
         assertTrue(testLeafKey1SchemaNode != null);
         assertTrue(testLeafKey1SchemaNode instanceof LeafSchemaNode);
         final NormalizedNodeBuilder<NodeIdentifier, Object, LeafNode<Object>> leafKey1 =
-            SchemaAwareBuilders.leafBuilder((LeafSchemaNode) testLeafKey1SchemaNode);
+            Builders.leafBuilder();
         leafKey1.withValue(payloadKey1);
         testNodeContainer.withChild(leafKey1.build());
 
@@ -197,7 +197,7 @@ public class RestPutListDataTest {
             assertNotNull(testLeafKey2SchemaNode);
             assertTrue(testLeafKey2SchemaNode instanceof LeafSchemaNode);
             final NormalizedNodeBuilder<NodeIdentifier, Object, LeafNode<Object>> leafKey2 =
-                SchemaAwareBuilders.leafBuilder((LeafSchemaNode) testLeafKey2SchemaNode);
+                Builders.leafBuilder();
             leafKey2.withValue(payloadKey2);
             testNodeContainer.withChild(leafKey2.build());
         }

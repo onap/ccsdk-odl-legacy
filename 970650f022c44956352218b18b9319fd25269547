@@ -1,0 +1,8 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Verified+1: ONAP Required GHA <releng+onap.required.gha@linuxfoundation.org>
+Code-Review+2: KAPIL SINGAL <ks220y@att.com>
+Submitted-by: Dan Timoney <dtimoney@att.com>
+Submitted-at: Fri, 19 Jul 2024 18:52:04 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/ccsdk/odl-legacy/+/136447
+Project: ccsdk/odl-legacy
+Branch: refs/heads/master
